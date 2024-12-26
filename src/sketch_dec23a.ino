@@ -4,25 +4,25 @@
 #include "stateMachine.h"
 
 //Pin definition
-#define SERVO_PIN 22
+#define SERVO_PIN = 22;
 #define VIBRATION_PIN 25
-#define LOADCELL_PORTION_DOUT_PIN 15
-#define LOADCELL_PORTION_SCK_PIN 5
-#define LOADCELL_DISPENSER_DOUT_PIN 16
-#define LOADCELL_DISPENSER_SCK_PIN 4
+#define LOADCELL_PORTION_DOUT_PIN = 15;
+#define LOADCELL_PORTION_SCK_PIN = 5;
+#define LOADCELL_DISPENSER_DOUT_PIN = 16;
+#define LOADCELL_DISPENSER_SCK_PIN = 4;
 
-float portionSize = 25.0; //expressed in grams
+float portionSize = 20.0; //expressed in grams
 float dispenserValue;
-State_t currentState = INIT;
+State currentState = INIT;
+
 
 //State machine definition
-
 StateMachine_t StateMachine[] = {
-        {INIT, fn_StateINIT},
-        {STAND_BY, fn_StateSTANDBY},
-        {DISPENSE, fn_StateDISPENSE},
-        {EMPTY, fn_StateEMPTY},
-        {REFILL, fn_StateREFILL},
+        {INIT, fn_StateINIT()},
+        {STAND_BY, fn_StateSTANDBY()},
+        {DISPENSE, fn_StateDISPENSE()},
+        {EMPTY, fn_StateEMPTY()},
+        {REFILL, fn_StateREFILL()},
 };
 
 Servo servo1;
@@ -34,7 +34,7 @@ void setup() {
     Serial.begin(115200);
 
     //configure servo motor
-    servo1.attach(SERVO_PIN);
+//    servo1.attach(SERVO_PIN);
 
     //configure vibration motor
 //    pinMode(VIBRATION_PIN, OUTPUT);
@@ -67,16 +67,16 @@ void loop() {
 //    dispenserValue = scale_dispenser.get_units(10);  //updates dispenser/1s
     dispenserValue = 100.0;
 //    delay(1000);
-//    openServo();
-//    delay(1000);
+    //openServo();
+    //delay(1000);
 
     //closeServo();
     //delay(1000);
 
     //Serial.println(scale_portion.get_units(), 1);
 //    Serial.println(scale_dispenser.get_units(5), 1);
-    if(currentState < NUM_STATES){
-    (*StateMachine[currentState].state_func)();
+    if(current_state < NUM_STATES){
+        (*StateMachine[currentState].state_func)();
     }
     else{
         Serial.println("ERROR!");
