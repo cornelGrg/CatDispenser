@@ -4,5 +4,6 @@
 
 void initWiFi(const char* ssid, const char* password);
 void disconnectWiFi();
+void checkWifiStatus();
 
 #endif

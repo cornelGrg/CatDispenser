@@ -45,3 +45,30 @@ void fn_StateREFILL(){
     delay(5000);
     currentState = STAND_BY;
 }
+
+void initDevices(){
+    //configure servo motor
+    servo1.attach(SERVO_PIN);
+
+    //configure vibration motor
+    pinMode(VIBRATION_PIN, OUTPUT);
+
+
+    //configure scale portion
+    scale_portion.begin(LOADCELL_PORTION_DOUT_PIN, LOADCELL_PORTION_SCK_PIN);
+
+//    Serial.println("Calibrating portion scale \n");
+//    delay(2000);
+//    calibrateScale(scale_portion);
+//    Serial.println("Portion scale calibrated! \n");
+
+    //configure scale dispenser
+    scale_dispenser.begin(LOADCELL_DISPENSER_DOUT_PIN, LOADCELL_DISPENSER_SCK_PIN);  
+//    Serial.println("Calibrating dispenser scale \n");
+//    delay(2000);
+//    calibrateScale(scale_dispenser);
+//    Serial.println("Dispenser scale calibrated! \n");
+
+//    scale_portion.tare();
+//    scale_dispenser.tare();
+}

@@ -5,124 +5,27 @@
 #include "wifiSupport.h"
 #include "webServerSupport.h"
 
-//Pin definition
-#define SERVO_PIN 22
-#define VIBRATION_PIN 25
-#define LOADCELL_PORTION_DOUT_PIN 15
-#define LOADCELL_PORTION_SCK_PIN 5
-#define LOADCELL_DISPENSER_DOUT_PIN 16
-#define LOADCELL_DISPENSER_SCK_PIN 4
-
 float portionSize = 25.0; //expressed in grams // da spostare forse----------
-float dispenserValue; // da spostare forse------------------------------------
-State_t currentState = INIT;
-
-
 float dispenserReading = 0.0;
 float portionReading = 0.0;
-std::vector<String> dispenseTimes;
+State_t currentState = INIT;
 
 // Synchronization interval (e.g., every 12 hours)
 unsigned int lastSyncTime = 0;
 
 void setup() {
     Serial.begin(115200);
-
     // Connect to Wi-Fi for synchronization
     initWiFi("HomeLife_Fibra", "grepolis2003");
     //Check if connected to Wi-Fi
-    while (WiFi.status() != WL_CONNECTED) {
-        delay(500);
-        Serial.print(".");
-    }
-    Serial.println("WiFi connected.");
-    Serial.println("IP address: ");
-    Serial.println(WiFi.localIP());
+    checkWifiStatus();
 
-    if (!LittleFS.begin(true)) {
-        Serial.println("LittleFS Mount Failed");
-        return;
-    }
-
-    server.on("/", HTTP_GET, [](AsyncWebServerRequest *request){
-        request->send(LittleFS, "/WebServer.html", String(), false);
-    });
-
-    server.on("/sensor-data", HTTP_GET, [](AsyncWebServerRequest *request){
-        String json = "{\"dispenser\":" + String(dispenserReading) + ",\"portion\":" + String(portionReading) + "}";
-        request->send(200, "application/json", json);
-    });
-
-    server.on("/dispense", HTTP_POST, [](AsyncWebServerRequest *request){
-        // Simulate dispensing
-        Serial.println("Dispensing...");
-        request->send(200, "text/plain", "Dispensing completed!");
-    });
-
-    server.onRequestBody([](AsyncWebServerRequest *request, uint8_t *data, size_t len, size_t index, size_t total) {
-        if (request->url() == "/save-settings" && request->method() == HTTP_POST) {
-            String body = String((char*)data).substring(0, len);
-            Serial.println("Received body: " + body);
-
-            // Parse JSON
-            StaticJsonDocument<200> doc;
-            DeserializationError error = deserializeJson(doc, body);
-
-            if (error) {
-                Serial.print("JSON parsing failed: ");
-                Serial.println(error.c_str());
-                request->send(400, "text/plain", "Bad Request: Invalid JSON");
-                return;
-            }
-
-            // Extract dispense time string and split into time slots
-            String dispenseTime = doc["dispenseTime"];
-            dispenseTimes = splitString(dispenseTime, '_');
-            portionSize = doc["portionSize"];
-
-            Serial.println("Saved time slots:");
-            for (const auto &time : dispenseTimes) {
-                Serial.println(time);
-            }
-
-            Serial.println(portionSize);
-
-            request->send(200, "text/plain", "Time slots saved!");
-        }
-    });
-    Serial.println("Server enabled!");
-
-    server.begin();
+    startWebServer();
 
     syncTimeWithNTP();
     lastSyncTime = millis();  // Record the last synchronization time
 
-    //configure servo motor
-    servo1.attach(SERVO_PIN);
-    //configure vibration motor
-//    pinMode(VIBRATION_PIN, OUTPUT);
-
-    Serial.println("Initializing the scale \n");
-
-    //configure scale portion
-//    scale_portion.begin(LOADCELL_PORTION_DOUT_PIN, LOADCELL_PORTION_SCK_PIN);
-
-//    Serial.println("Calibrating portion scale \n");
-//    delay(2000);
-//    calibrateScale(scale_portion);
-//    Serial.println("Portion scale calibrated! \n");
-
-//    configure scale portion
-//    scale_dispenser.begin(LOADCELL_DISPENSER_DOUT_PIN, LOADCELL_DISPENSER_SCK_PIN);
-
-//    Serial.println("Calibrating dispenser scale \n");
-//    delay(2000);
-//    calibrateScale(scale_dispenser);
-//    Serial.println("Dispenser scale calibrated! \n");
-
-//    scale_portion.tare();
-//    scale_dispenser.tare();
-
+    initDevices();
 }
 
 void loop() {
@@ -134,7 +37,6 @@ void loop() {
     }
 
 
-
     if (isSyncDue(lastSyncTime)) {
         syncTimeWithNTP();
         lastSyncTime = millis();
@@ -142,13 +44,6 @@ void loop() {
 
     Serial.println(getCurrentTime());
 //    dispenserValue = scale_dispenser.get_units(10);  //updates dispenser/1s
-    dispenserValue = 100.0;
-//    delay(1000);
-//    openServo();
-//    delay(1000);
-
-    //closeServo();
-    //delay(1000);
 
     //Serial.println(scale_portion.get_units(), 1);
 //    Serial.println(scale_dispenser.get_units(5), 1);
