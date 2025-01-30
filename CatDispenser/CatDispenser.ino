@@ -17,6 +17,11 @@ float portionSize = 25.0; //expressed in grams // da spostare forse----------
 float dispenserValue; // da spostare forse------------------------------------
 State_t currentState = INIT;
 
+
+float dispenserReading = 0.0;
+float portionReading = 0.0;
+std::vector<String> dispenseTimes;
+
 // Synchronization interval (e.g., every 12 hours)
 unsigned int lastSyncTime = 0;
 
@@ -34,9 +39,63 @@ void setup() {
     Serial.println("IP address: ");
     Serial.println(WiFi.localIP());
 
+    if (!LittleFS.begin(true)) {
+        Serial.println("LittleFS Mount Failed");
+        return;
+    }
+
+    server.on("/", HTTP_GET, [](AsyncWebServerRequest *request){
+        request->send(LittleFS, "/WebServer.html", String(), false);
+    });
+
+    server.on("/sensor-data", HTTP_GET, [](AsyncWebServerRequest *request){
+        String json = "{\"dispenser\":" + String(dispenserReading) + ",\"portion\":" + String(portionReading) + "}";
+        request->send(200, "application/json", json);
+    });
+
+    server.on("/dispense", HTTP_POST, [](AsyncWebServerRequest *request){
+        // Simulate dispensing
+        Serial.println("Dispensing...");
+        request->send(200, "text/plain", "Dispensing completed!");
+    });
+
+    server.onRequestBody([](AsyncWebServerRequest *request, uint8_t *data, size_t len, size_t index, size_t total) {
+        if (request->url() == "/save-settings" && request->method() == HTTP_POST) {
+            String body = String((char*)data).substring(0, len);
+            Serial.println("Received body: " + body);
+
+            // Parse JSON
+            StaticJsonDocument<200> doc;
+            DeserializationError error = deserializeJson(doc, body);
+
+            if (error) {
+                Serial.print("JSON parsing failed: ");
+                Serial.println(error.c_str());
+                request->send(400, "text/plain", "Bad Request: Invalid JSON");
+                return;
+            }
+
+            // Extract dispense time string and split into time slots
+            String dispenseTime = doc["dispenseTime"];
+            dispenseTimes = splitString(dispenseTime, '_');
+            portionSize = doc["portionSize"];
+
+            Serial.println("Saved time slots:");
+            for (const auto &time : dispenseTimes) {
+                Serial.println(time);
+            }
+
+            Serial.println(portionSize);
+
+            request->send(200, "text/plain", "Time slots saved!");
+        }
+    });
+    Serial.println("Server enabled!");
+
+    server.begin();
+
     syncTimeWithNTP();
     lastSyncTime = millis();  // Record the last synchronization time
-
 
     //configure servo motor
     servo1.attach(SERVO_PIN);
@@ -67,7 +126,14 @@ void setup() {
 }
 
 void loop() {
-    startWebServer();
+
+    for (int i = 0; i < 10; ++i) {
+        dispenserReading = i*100 ;
+        portionReading =  i*100;
+        delay(2000);
+    }
+
+
 
     if (isSyncDue(lastSyncTime)) {
         syncTimeWithNTP();

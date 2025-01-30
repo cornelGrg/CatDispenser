@@ -3,10 +3,17 @@
 #include <Arduino.h>
 #include <AsyncTCP.h>
 #include <ESPAsyncWebServer.h>
+#include <LittleFS.h>
+#include <ArduinoJson.h>
+#include <vector>
+#include <cstring>
 
 // Set web server port number to 80
-//WiFiServer server(80);
+extern AsyncWebServer server;
+extern const char index_html[] PROGMEM;
 
 void startWebServer();
+String processor(const String& var);
+std::vector<String> splitString(const String &str, char delimiter);
 
 #endif //CATDISPENSER_WEBSERVERSUPPORT_H
