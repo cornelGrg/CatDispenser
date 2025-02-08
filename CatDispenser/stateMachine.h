@@ -1,8 +1,14 @@
 #ifndef CATDISPENSER_STATEMACHINE_H
 #define CATDISPENSER_STATEMACHINE_H
 #include <Arduino.h>
+#include <esp_wifi.h>
+#include <vector>
+#include <algorithm>
+#include <ESPAsyncWebServer.h>
 #include "servoSupport.h"
 #include "scaleSupport.h"
+#include "timerSupport.h"
+#include "powerSaving.h"
 
 #define SERVO_PIN 22
 #define VIBRATION_PIN 25
@@ -16,7 +22,6 @@ typedef enum State_t {
     INIT,
     STAND_BY,
     DISPENSE,
-    EMPTY,
     REFILL,
     NUM_STATES
 } State_t;
@@ -26,18 +31,22 @@ typedef struct{
     void (*state_func)(void);
 } StateMachine_t;
 
-extern float portionSize; //expressed in grams
+static String lastReturnedSlot;
+
+extern volatile float portionSize; //expressed in grams
 extern std::vector<String> dispenseTimes; //array with time slots
 extern float dispenserReading;
 extern float portionReading;
-extern State_t currentState;
+volatile extern State_t currentState;
+extern AsyncEventSource events;
 
 void fn_StateINIT();
 void fn_StateSTANDBY();
 void fn_StateDISPENSE();
-void fn_StateEMPTY();
 void fn_StateREFILL();
 void initDevices();
+String getNextTimeSlot();
+
 
 //State machine definition
 extern StateMachine_t StateMachine[];

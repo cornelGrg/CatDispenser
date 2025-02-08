@@ -60,16 +60,56 @@
             padding: 10px 20px;
             width: 48%;
         }
+        .menu {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .hidden {
+            display: none;
+        }
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 5px;
+            max-width: 400px;
+            margin: auto;
+        }
+        .slot {
+            padding: 10px;
+            background-color: lightgray;
+            text-align: center;
+            cursor: pointer;
+            border-radius: 5px;
+            user-select: none;
+        }
+        .selected {
+            background-color: green;
+            color: white;
+        }
+
+        .menu button {
+            margin-top: 20px;
+            display: block;
+            width: 200px;
+            margin-left: auto;
+            margin-right: auto;
+            font-size: 18px;
+            padding: 10px;
+        }
     </style>
 </head>
 <body>
 <h1>Dispenser Control</h1>
 <div class="box">Dispenser Scale <span class="sensor-reading" id="dispenser-reading">000.0</span></div>
 <div class="box">Portion Scale <span class="sensor-reading" id="portion-reading">000.0</span></div>
-<div class="input-group">
-    <label for="dispense-time">Set Dispense Time:</label>
-    <input type="text" id="dispense-time" name="dispense-time">
+
+<div class="menu">
+    <button onclick="toggleMenu()">Select Time Slots</button>
 </div>
+<div id="slotMenu" class="hidden">
+    <div class="grid" id="slotContainer"></div>
+</div>
+
 <div class="input-group">
     <label for="portion-size">Set Portion Size:</label>
     <input type="text" id="portion-size" name="portion-size">
@@ -80,6 +120,100 @@
 </div>
 
 <script>
+    const slotContainer = document.getElementById("slotContainer");
+    const slotMenu = document.getElementById("slotMenu");
+    const maxSlots = 7;
+
+    async function saveSettings() {
+        const portionSize = document.getElementById("portion-size").value;
+        const selectedSlots = Array.from(document.querySelectorAll(".slot.selected"))
+            .map(slot => slot.textContent);
+
+        if (selectedSlots.length > maxSlots) {
+            alert("You can select a maximum of " + maxSlots + " slots.");
+            return;
+        }
+
+        const slotString = selectedSlots.join("_") + "_"; // Format HH:MM_HH:MM_
+
+        const data = {
+            portionSize: parseFloat(portionSize),
+            dispenseTime: slotString
+        };
+
+        try {
+            const response = await fetch("/save-settings", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(data)
+            });
+            const result = await response.text();
+            alert(result);
+        } catch (error) {
+            console.error("Error saving settings:", error);
+        }
+    }
+
+    async function loadSlotsFromServer() {
+        try {
+            const response = await fetch("/get-settings");
+            const data = await response.json();
+
+            // Check if the current state is "REFILL" and show the alert
+            if (data.currentState === "REFILL") {
+                showRefillAlert();
+            }
+
+            if (data.slots) {
+                const slots = data.slots.split("_").filter(Boolean);
+                slots.forEach(time => {
+                    let slotElement = document.querySelector(`.slot[data-time='${time}']`);
+                    if (slotElement) {
+                        slotElement.classList.add("selected");
+                    }
+                });
+            }
+
+            if(data.portion){
+                document.getElementById("portion-size").value = data.portion;
+            }
+        } catch (error) {
+            console.error("Error fetching slots from server:", error);
+        }
+
+
+
+    }
+
+    function toggleMenu() {
+        slotMenu.classList.toggle("hidden");
+    }
+
+    function closeMenu() {
+        saveSettings();
+        toggleMenu();
+    }
+
+    for (let hour = 12; hour < 13; hour++) {
+        for (let min = 0; min < 60; min += 1) {
+            let time = `${String(hour).padStart(2, '0')}:${String(min).padStart(2, '0')}`;
+            let div = document.createElement("div");
+            div.classList.add("slot");
+            div.setAttribute("data-time", time);
+            div.textContent = time;
+            div.onclick = () => {
+                if (div.classList.contains("selected")) {
+                    div.classList.remove("selected");
+                } else if (document.querySelectorAll(".slot.selected").length < maxSlots) {
+                    div.classList.add("selected");
+                } else {
+                    alert("You can select a maximum of " + maxSlots + " slots.");
+                }
+            };
+            slotContainer.appendChild(div);
+        }
+    }
+
     // Function to fetch sensor readings from the ESP32
     async function updateSensorReadings() {
         try {
@@ -102,33 +236,65 @@
             console.error("Error dispensing:", error);
         }
     }
+    const eventSource = new EventSource("/events");
 
-    // Function to save settings (dispense time and portion size) to the ESP32
-    async function saveSettings() {
-        const dispenseTime = document.getElementById("dispense-time").value;
-        const portionSize = document.getElementById("portion-size").value;
-
-        const data = {
-            dispenseTime: dispenseTime,
-            portionSize: parseFloat(portionSize)
-        };
-
-        try {
-            const response = await fetch("/save-settings", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify(data)
-            });
-            const result = await response.text();
-            alert(result);
-        } catch (error) {
-            console.error("Error saving settings:", error);
+    eventSource.addEventListener("alert", (event) => {
+        if (event.data === "REFILL") {
+            showRefillAlert();
         }
+    });
+
+    eventSource.addEventListener("alert", (event) => {
+        if (event.data === "HIDE") {
+            hideRefillAlert();
+        }
+    });
+
+    function showRefillAlert() {
+        const alertBox = document.createElement("div");
+        alertBox.id = "refill-alert";
+        alertBox.style.cssText = `
+        position: fixed;
+        top: 20px;
+        left: 50%;
+        transform: translateX(-50%);
+        background: red;
+        color: white;
+        padding: 20px;
+        border: 2px solid black;
+        z-index: 1000;
+        font-size: 18px;
+        text-align: center;
+    `;
+
+        alertBox.innerHTML = `
+        <p style="font-weight: bold; margin: 0;">Refill needed!</p>
+        <p style="font-weight: bold; margin: 0;">Please refill the dispenser.</p>
+    `;
+        document.body.appendChild(alertBox);
+
+        // Disable buttons while in refill state
+        document.querySelector("button[onclick='dispense()']").disabled = true;
+        document.querySelector("button[onclick='saveSettings()']").disabled = true;
+    }
+
+    function hideRefillAlert() {
+        const alertBox = document.getElementById("refill-alert");
+        if (alertBox) {
+            alertBox.remove();
+        }
+
+        // Re-enable buttons when refill is done
+        document.querySelector("button[onclick='dispense()']").disabled = false;
+        document.querySelector("button[onclick='saveSettings()']").disabled = false;
     }
 
     // Update sensor readings every 2 seconds
     setInterval(updateSensorReadings, 2000);
-    window.onload = updateSensorReadings;
+    window.onload = () => {
+        updateSensorReadings();
+        loadSlotsFromServer();
+    };
 </script>
 </body>
 </html>

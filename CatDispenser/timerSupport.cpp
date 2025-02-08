@@ -26,8 +26,8 @@ void syncTimeWithNTP() {
 String getCurrentTime() {
     struct tm timeinfo;
     if (getLocalTime(&timeinfo)) {
-        char buffer[64];
-        strftime(buffer, sizeof(buffer), "%H:%M:%S", &timeinfo);
+        char buffer[6];  // HH:MM + null terminator
+        strftime(buffer, sizeof(buffer), "%H:%M", &timeinfo);
         return String(buffer);
     } else {
         return "Time not available";

@@ -1,17 +1,18 @@
-#include "scaleSupport.h"
-#include "servoSupport.h"
 #include "stateMachine.h"
+#include "servoSupport.h"
+#include "scaleSupport.h"
 #include "timerSupport.h"
 #include "wifiSupport.h"
 #include "webServerSupport.h"
 
-float portionSize = 25.0; //expressed in grams // da spostare forse----------
+//TO BE MOVED
+volatile float portionSize = 0.0; //expressed in grams // da spostare forse----------
 float dispenserReading = 0.0;
 float portionReading = 0.0;
-State_t currentState = INIT;
+
+volatile State_t currentState = INIT;
 
 // Synchronization interval (e.g., every 12 hours)
-unsigned int lastSyncTime = 0;
 
 void setup() {
     Serial.begin(115200);
@@ -24,26 +25,15 @@ void setup() {
 
     syncTimeWithNTP();
     lastSyncTime = millis();  // Record the last synchronization time
+    esp_sleep_enable_wifi_wakeup();
+//    initDevices();
 
-    initDevices();
 }
 
 void loop() {
 
-    for (int i = 0; i < 10; ++i) {
-        dispenserReading = i*100 ;
-        portionReading =  i*100;
-        delay(2000);
-    }
-
-
-    if (isSyncDue(lastSyncTime)) {
-        syncTimeWithNTP();
-        lastSyncTime = millis();
-    }
-
-    Serial.println(getCurrentTime());
-//    dispenserValue = scale_dispenser.get_units(10);  //updates dispenser/1s
+    Serial.println("\nCurrent local time: " + getCurrentTime() +"\n");
+    delay(3000);
 
     //Serial.println(scale_portion.get_units(), 1);
 //    Serial.println(scale_dispenser.get_units(5), 1);
@@ -52,7 +42,7 @@ void loop() {
         (*StateMachine[currentState].state_func)();
     }
     else{
-        Serial.println("ERROR!");
+        Serial.println("State machine error!");
     }
 
     //Serial.println("Motor On");
