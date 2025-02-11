@@ -57,7 +57,7 @@ void startWebServer(){
 
     // Handler per caricare gli slot salvati
     server.on("/get-settings", HTTP_GET, [](AsyncWebServerRequest *request) {
-        Serial.println("Calling loadSlotsFromServer() function");
+        //Serial.println("Calling loadSlotsFromServer() function");
         Serial.println(savedTimes);
 
         // Creiamo il JSON con gli slot salvati
@@ -74,23 +74,35 @@ void startWebServer(){
         request->send(200, "application/json", jsonResponse);
     });
 
-
-//    // Handle refill notifications
-//    events.onConnect([](AsyncEventSourceClient *client) {
-//        if (client->lastId()) {
-//            Serial.printf("Client reconnected! Last message ID: %u\n", client->lastId());
-//        }
-//        Serial.println("Client connected to SSE!");
-//        // Send refill notification if refill is needed
-//        if (currentState == REFILL) {
-//            client->send("REFILL", "alert", millis());
-//        }
-//    });
-
     server.addHandler(&events);
     server.begin();
     Serial.println("Server enabled!");
 
+}
+
+void sendNotification(String message){  //used to send notifications using the CallMeBotAPI
+    Serial.println("Notification to telegram sent!");
+    // Data to send with HTTP POST
+    String url = "https://api.callmebot.com/telegram/group.php?apikey=LTQ2NTkxNjU0NDI&text=" + urlEncode(message);
+    HTTPClient http;
+    http.begin(url);
+
+    // Specify content-type header
+    http.addHeader("Content-Type", "application/x-www-form-urlencoded");
+
+    // Send HTTP POST request
+    int httpResponseCode = http.POST(url);
+    if (httpResponseCode == 200){
+        Serial.println("Message sent successfully");
+    }
+    else{
+        Serial.println("Error sending the message");
+        Serial.println("HTTP response code: ");
+        Serial.println(httpResponseCode);
+    }
+
+    // Free resources
+    http.end();
 }
 
 std::vector<String> splitString(const String &str, char delimiter) {

@@ -10,7 +10,8 @@
 #include "timerSupport.h"
 #include "powerSaving.h"
 
-#define SERVO_PIN 22
+#define SERVO_INT_PIN 22
+#define SERVO_EXT_PIN 23
 #define VIBRATION_PIN 25
 #define LOADCELL_PORTION_DOUT_PIN 15
 #define LOADCELL_PORTION_SCK_PIN 5
@@ -45,6 +46,8 @@ void fn_StateSTANDBY();
 void fn_StateDISPENSE();
 void fn_StateREFILL();
 void initDevices();
+void dispense();
+extern void sendNotification(String message);
 String getNextTimeSlot();
 
 

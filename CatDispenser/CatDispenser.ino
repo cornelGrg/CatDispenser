@@ -26,7 +26,7 @@ void setup() {
     syncTimeWithNTP();
     lastSyncTime = millis();  // Record the last synchronization time
     esp_sleep_enable_wifi_wakeup();
-//    initDevices();
+    initDevices();
 
 }
 

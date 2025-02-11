@@ -9,50 +9,52 @@ StateMachine_t StateMachine[] = {
 };
 
 void fn_StateINIT(){
+
     Serial.println("State: INIT \n");
     //init scale values and update for the first time
     //update reading values
     dispenserReading = 150;  //update with real values!!!
     portionReading = 30;
+//    portionReading = scale_portion.get_units(10);
+//    dispenserReading = scale_dispenser.get_units(10);
 
     lastReturnedSlot = "";
+
     //wait until portion size and dispense time slots are set for the first time (show notification on web server)
-    while(portionSize == 0.0 || dispenseTimes.size() == 0) { //PERFORM INPUT SANITATION AND CHECKS
+    while((portionSize == 0.0 || sizeof(portionSize) != sizeof(float)) || dispenseTimes[0]=="") { //PERFORM INPUT SANITATION AND CHECKS
         Serial.println("Insert valid parameters to start :)");
         delay(5000);
     }
+
     if (portionSize != 0.0){
         Serial.println("Portion Size --> " + String(portionSize));
     }else{
         Serial.println("Invalid input for portion size");
     }
+//    Serial.println("dispensetime size= " + String(dispenseTimes.size()));
     if(dispenseTimes.size() != 0){
-//        sort(dispenseTimes.begin(), dispenseTimes.end());
         Serial.println("Saved time slots:");
         for (auto &time : dispenseTimes) {
-            Serial.println(time);
+            Serial.print(time + " | ");
         }
+        Serial.println();
     }else{
         Serial.println("Invalid input for dispense times");
     }
 
-
-    if(dispenserReading < portionSize){
+    if (portionSize > (dispenserReading - 0.1 * portionSize)){
         currentState = REFILL;
     }else{
         currentState = STAND_BY;
     }
-
-    /*Serial.println("Time slots set: ");
-    for (const String& slot : dispenseTimes) {
-       Serial.println(slot);
-    }*/
 
 }
 
 void fn_StateSTANDBY(){
     //update reading values
     Serial.println("State: STANDBY \n");
+//    portionReading = scale_portion.get_units(10);
+//    dispenserReading = scale_dispenser.get_units(10);
 
     if (isSyncDue(lastSyncTime)) { //checks if it's time to synchronize
         syncTimeWithNTP();
@@ -78,51 +80,55 @@ void fn_StateSTANDBY(){
 void fn_StateDISPENSE(){
     Serial.println("State: DISPENSE \n");
     //update scale values
+//    portionReading = scale_portion.get_units(10);
+//    dispenserReading = scale_dispenser.get_units(10);
 
-    if (portionSize > dispenserReading) {
+    if (portionSize > (dispenserReading - 0.1 * portionSize)) {
         currentState = REFILL;
     }
 
     Serial.println("Currently dispensing... (5seconds) \n");
+    //dispense();
     delay(5000);
 
-    //function that dispenses dispense(servo, vibrator....)
-
-    if (portionSize > dispenserReading){
+    if (portionSize > (dispenserReading - 0.1 * portionSize)){
         currentState = REFILL;
     }else{
         currentState = STAND_BY;
     }
 
+    if(dispenseTimes.size() == 2) { //delay for limit case of only one
+        delay(60000);
+    }
 }
 
 void fn_StateREFILL(){ //includes empty
     //update reading values
+    sendNotification("Refill needed!");
     Serial.println("State: REFILL \n");
     events.send("REFILL", "alert", millis());
     //activate webserver allert to say that refill is needed
     Serial.println("Refill is needed, please refill dispenser! \n");
     EnablePowerSaving();
 
-    while(portionSize > dispenserReading){
-        dispenserReading = 75; //update reading (USE REAL VALUES!!!)
-
+    while(portionSize > (dispenserReading - 0.1 * portionSize)){
+        //dispenserReading = 75; //update reading (USE REAL VALUES!!!)
+    //  dispenserReading = scale_dispenser.get_units(10);
         //FOR TESTING PURPOSES TO SIMULATE A REFILL
-        delay(10000);
-        Serial.println("Refill has been performed!");
-        dispenserReading = 160;
+        delay(2000);
+        dispenserReading = 200;
     }
+    Serial.println("Refill has been performed!");
     DisablePowerSaving();
     events.send("HIDE", "alert", millis());
-
-
 
     currentState = STAND_BY;
 }
 
 void initDevices(){
     //configure servo motor
-    servo1.attach(SERVO_PIN);
+    servoInternal.attach(SERVO_INT_PIN);
+    servoExternal.attach(SERVO_EXT_PIN);
 
     //configure vibration motor
     pinMode(VIBRATION_PIN, OUTPUT);
@@ -130,20 +136,20 @@ void initDevices(){
     //configure scale portion
     scale_portion.begin(LOADCELL_PORTION_DOUT_PIN, LOADCELL_PORTION_SCK_PIN);
 
-//    Serial.println("Calibrating portion scale \n");
-//    delay(2000);
-//    calibrateScale(scale_portion);
-//    Serial.println("Portion scale calibrated! \n");
+     Serial.println("Calibrating portion scale \n");
+     delay(1000);
+//     calibrateScale(scale_portion);
+     Serial.println("Portion scale calibrated! \n");
 
     //configure scale dispenser
     scale_dispenser.begin(LOADCELL_DISPENSER_DOUT_PIN, LOADCELL_DISPENSER_SCK_PIN);
-//    Serial.println("Calibrating dispenser scale \n");
-//    delay(2000);
+    Serial.println("Calibrating dispenser scale \n");
+    delay(1000);
 //    calibrateScale(scale_dispenser);
-//    Serial.println("Dispenser scale calibrated! \n");
+    Serial.println("Dispenser scale calibrated! \n");
 
-//    scale_portion.tare();
-//    scale_dispenser.tare();
+    scale_portion.tare();
+    scale_dispenser.tare();
 }
 
 String getNextTimeSlot() {
@@ -171,10 +177,23 @@ String getNextTimeSlot() {
         }
     }
 
-    if(dispenseTimes.size() == 1) {
-        delay(60000);
-    }
-
     lastReturnedSlot = dispenseTimes[0]; // Update to the first slot for tomorrow if there are no more valid slots for today
     return dispenseTimes[0];
+}
+
+void dispense(){
+    Serial.println("Dispensing...");
+//digitalWrite(VIBRATION_PIN, HIGH);
+    servoExternal.write(140); //open external servo
+    String support_timer = getCurrentTime();
+    float last_portionReading = portionReading;
+    while(portionReading < portionSize - 3){  //estimate 3gr of stuck kibbles
+        openServo(&servoInternal, 170, 2);
+        openServo(&servoInternal, 30, 2);
+        portionReading = scale_portion.get_units(10);
+    }
+    //digitalWrite(VIBRATION_PIN, LOW);
+    servoExternal.write(180); //close external servo, maybe set to 190?
+
+    dispenserReading = scale_dispenser.get_units(10);
 }

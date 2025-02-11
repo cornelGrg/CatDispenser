@@ -2,9 +2,10 @@
 #define CATDISPENSER_SERVO_H
 #include <ESP32Servo.h>
 
-extern Servo servo1;
+extern Servo servoInternal;
+extern Servo servoExternal;
 
-void openServo();
-void closeServo();
+void openServo(Servo* servo, int angle, int del);
+void closeServo(Servo* servo, int angle, int del);
 
 #endif
