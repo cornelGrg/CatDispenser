@@ -65,6 +65,7 @@ void fn_StateSTANDBY(){
     Serial.println(getCurrentTime() + " ---> " + nextSlot);
     while (getCurrentTime() != nextSlot){
         if(currentState == INIT || currentState == DISPENSE){  //override standby for buttons
+            DisablePowerSaving();
             return;
         }
     }
