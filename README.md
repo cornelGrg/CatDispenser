@@ -1,7 +1,7 @@
 # Cat Food Dispenser Project
 
 ## Overview
-This project is an automated cat food dispenser that uses an ESP32 microcontroller to control servo motors, load cells (scales), and a vibration motor. The dispenser can be programmed to release a specific portion of food at scheduled times. It also includes a web server interface for configuration and monitoring, as implemented in [webServer.html](webServer.html).
+This project is an automated cat food dispenser that uses an ESP32 microcontroller to control servo motors, load cells (scales), and a vibration motor. The dispenser can be programmed to release a specific portion of food at scheduled times. It also includes a web server interface for configuration and monitoring.
 
 ## Hardware Requirements
 - **MCU**: ESP32
@@ -37,7 +37,7 @@ The project is organized into several files, each handling a specific functional
 - **stateMachine.cpp**: Implements the state machine logic for the dispenser.
 - **webServerSupport.cpp**: Manages the web server for configuration and monitoring.
 - **timerSupport.cpp**: Handles time synchronization and scheduling.
-- **[webServer.html](webServer.html)**: Implements the front-end interface for controlling and monitoring the dispenser.
+- **webServer.html**: Implements the front-end interface for controlling and monitoring the dispenser.
 
 ### How to Build, Burn, and Run the Project
 
@@ -68,7 +68,7 @@ The project is organized into several files, each handling a specific functional
 
 7. **Run the Project**:
    - The ESP32 will start the cat food dispenser program.
-   - Access the web interface in [webServer.html](webServer.html) to configure settings.
+   - Access the web interface to configure settings.
 
 ## User Guide
 
@@ -78,14 +78,14 @@ The project is organized into several files, each handling a specific functional
   ```cpp
   initWiFi("Your_WiFi_SSID", "Your_WiFi_Password");
   ```
-- Access the web interface via the ESP32's IP address (see [webServer.html](webServer.html)).
+- Access the web interface via the ESP32's IP address.
 
 ### 2. Configure Dispenser
 - **Set Portion Size**:
   - Enter the desired portion size (in grams).
   - Example: Enter `30` for 30g.
 - **Select Time Slots**:
-  - Choose multiple time slots for food dispensing using the interface in [webServer.html](webServer.html).
+  - Choose multiple time slots for food dispensing.
   - Example: `08:00` and `18:00` for twice daily.
 - **Save Settings**:
   - Click `Save` to store settings.
@@ -113,4 +113,6 @@ The project is organized into several files, each handling a specific functional
 - **YouTube Video**: [Link to your YouTube video]
 
 ## Conclusion
-This project automates cat food dispensing with remote monitoring and control. The web interface, implemented in [webServer.html](webServer.html), allows users to easily configure and monitor the system, making it a practical IoT solution for pet care.
+This project automates cat food dispensing with remote monitoring and control. The web interface allows users to easily configure and monitor the system, making it a practical IoT solution for pet care.
+
+
