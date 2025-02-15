@@ -6,6 +6,5 @@ extern Servo servoInternal;
 extern Servo servoExternal;
 
 void openServo(Servo* servo, int angle, int del);
-void closeServo(Servo* servo, int angle, int del);
 
 #endif

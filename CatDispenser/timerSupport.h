@@ -3,20 +3,20 @@
 #include "time.h"
 #include <Arduino.h>
 
-// Synchronization interval (e.g., every 12 hours)
+//Synchronization interval (e.g., every 12 hours)
 extern unsigned int lastSyncTime;
 
-// Initialize time synchronization with NTP
+//Initialize time synchronization with NTP
 void initTime();
 
-// Synchronize time with NTP
+//Synchronize time with NTP
 void syncTimeWithNTP();
 void startWebServer();
 
-// Get the current time as a formatted string
+//Get the current time as a formatted string
 String getCurrentTime();
 
-// Check if synchronization is due
+//Check if synchronization is due
 bool isSyncDue(int lastSyncTime);
 
 #endif

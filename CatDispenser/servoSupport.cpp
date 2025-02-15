@@ -8,13 +8,4 @@ void openServo(Servo* servo, int angle, int del){
         delay(del);
 
     }
-    Serial.println("Servo opened \n");
-}
-
-void closeServo(Servo servo, int angle, int del){
-    for(int posDegrees = angle; posDegrees >= 0; posDegrees--) {
-        servo.write(posDegrees);
-        delay(del);
-    }
-    Serial.println("Servo closed \n");
 }

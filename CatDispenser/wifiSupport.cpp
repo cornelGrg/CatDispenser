@@ -12,12 +12,6 @@ void initWiFi(const char* ssid, const char* password) {
     }
 }
 
-void disconnectWiFi() {
-    WiFi.disconnect(true);  // Disconnect Wi-Fi
-    WiFi.mode(WIFI_OFF);    // Turn off Wi-Fi to save power
-    Serial.println("Wi-Fi disconnected and turned off");
-}
-
 void checkWifiStatus(){
     while (WiFi.status() != WL_CONNECTED) {
         delay(500);

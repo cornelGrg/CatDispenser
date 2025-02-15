@@ -5,7 +5,6 @@
 extern HX711 scale_portion;
 extern HX711 scale_dispenser;
 
-void calibrateScale();
-
+void calibrateScale(HX711* scale, float calibration_factor);
 
 #endif //CATDISPENSER_SCALE_H

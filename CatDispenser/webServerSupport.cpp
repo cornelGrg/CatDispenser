@@ -1,7 +1,6 @@
 #include "webServerSupport.h"
 std::vector<String> dispenseTimes;
 
-
 AsyncWebServer server(80);
 AsyncEventSource events("/events");
 
@@ -44,7 +43,7 @@ void startWebServer(){
                 return;
             }
 
-            // Extract dispense time string and split into time slots
+            //Extract dispense time string and split into time slots
             String dispenseTime = doc["dispenseTime"];
             savedTimes = dispenseTime;
 
@@ -55,22 +54,22 @@ void startWebServer(){
         }
     });
 
-    // Handler per caricare gli slot salvati
+    // Handler used to load saved settings
     server.on("/get-settings", HTTP_GET, [](AsyncWebServerRequest *request) {
         //Serial.println("Calling loadSlotsFromServer() function");
         Serial.println(savedTimes);
 
-        // Creiamo il JSON con gli slot salvati
+        //Initialize JSON with saved settings
         StaticJsonDocument<200> doc;
         doc["slots"] = savedTimes;
         doc["portion"] = portionSize;
         doc["currentState"] = currentState == REFILL ? "REFILL" : "STAND_BY";  // Send current state
 
-        // Serializziamo il JSON
+        //Serialize JSON
         String jsonResponse;
         serializeJson(doc, jsonResponse);
 
-        // Inviamo la risposta
+        //Send http request
         request->send(200, "application/json", jsonResponse);
     });
 
@@ -82,15 +81,15 @@ void startWebServer(){
 
 void sendNotification(String message){  //used to send notifications using the CallMeBotAPI
     Serial.println("Notification to telegram sent!");
-    // Data to send with HTTP POST
+    //Data to send with HTTP POST
     String url = "https://api.callmebot.com/telegram/group.php?apikey=LTQ2NTkxNjU0NDI&text=" + urlEncode(message);
     HTTPClient http;
     http.begin(url);
 
-    // Specify content-type header
+    //Specify header
     http.addHeader("Content-Type", "application/x-www-form-urlencoded");
 
-    // Send HTTP POST request
+    //Send HTTP POST request
     int httpResponseCode = http.POST(url);
     if (httpResponseCode == 200){
         Serial.println("Message sent successfully");
@@ -101,7 +100,6 @@ void sendNotification(String message){  //used to send notifications using the C
         Serial.println(httpResponseCode);
     }
 
-    // Free resources
     http.end();
 }
 
@@ -116,6 +114,6 @@ std::vector<String> splitString(const String &str, char delimiter) {
         end = str.indexOf(delimiter, start);
     }
 
-    result.push_back(str.substring(start));  // Add the last part
+    result.push_back(str.substring(start));  //Add the last part
     return result;
 }

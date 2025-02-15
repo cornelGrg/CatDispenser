@@ -148,7 +148,7 @@
                 body: JSON.stringify(data)
             });
             const result = await response.text();
-            alert(result);
+            alert("Settings have been saved!");
         } catch (error) {
             console.error("Error saving settings:", error);
         }
@@ -194,8 +194,8 @@
         toggleMenu();
     }
 
-    for (let hour = 12; hour < 13; hour++) {
-        for (let min = 0; min < 60; min += 1) {
+    for (let hour = 0; hour < 24; hour++) {
+        for (let min = 0; min < 60; min += 30) {
             let time = `${String(hour).padStart(2, '0')}:${String(min).padStart(2, '0')}`;
             let div = document.createElement("div");
             div.classList.add("slot");

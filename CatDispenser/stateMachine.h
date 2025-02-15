@@ -12,11 +12,11 @@
 
 #define SERVO_INT_PIN 22
 #define SERVO_EXT_PIN 23
-#define VIBRATION_PIN 25
+#define VIBRATION_PIN 21
 #define LOADCELL_PORTION_DOUT_PIN 15
 #define LOADCELL_PORTION_SCK_PIN 5
-#define LOADCELL_DISPENSER_DOUT_PIN 16
-#define LOADCELL_DISPENSER_SCK_PIN 4
+#define LOADCELL_DISPENSER_DOUT_PIN 19
+#define LOADCELL_DISPENSER_SCK_PIN 18
 
 //State definition
 typedef enum State_t {
@@ -49,7 +49,6 @@ void initDevices();
 void dispense();
 extern void sendNotification(String message);
 String getNextTimeSlot();
-
 
 //State machine definition
 extern StateMachine_t StateMachine[];
