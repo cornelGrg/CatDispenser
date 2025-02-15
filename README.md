@@ -45,60 +45,72 @@ The project is organized into several files, each handling a specific functional
 
 2. **Install Required Libraries**:
    - Open the Arduino IDE and go to `Sketch > Include Library > Manage Libraries`.
-   - Search for and install the following libraries:
-     - `WiFi`
-     - `AsyncTCP`
-     - `ESPAsyncWebServer`
-     - `LittleFS`
-     - `ArduinoJson`
-     - `HX711`
-     - `Servo`
-     - `HTTPClient`
-     - `time`
+   - Search for and install the required libraries.
 
 3. **Set Up the ESP32 Board**:
-   - Go to `File > Preferences` and add the following URL to the "Additional Boards Manager URLs":
+   - Add the following URL to `File > Preferences > Additional Boards Manager URLs`:
      ```
      https://dl.espressif.com/dl/package_esp32_index.json
      ```
-   - Go to `Tools > Board > Boards Manager`, search for `ESP32`, and install the `esp32` package by Espressif Systems.
+   - Install the `esp32` package from the Boards Manager.
 
 4. **Select the Board and Port**:
-   - Go to `Tools > Board` and select `ESP32 Dev Module`.
-   - Go to `Tools > Port` and select the port where your ESP32 is connected.
+   - Select `ESP32 Dev Module` as the board.
+   - Choose the correct port.
 
 5. **Load the Project**:
-   - Open the `CatDispenser.ino` file in the Arduino IDE.
-   - Ensure all other `.cpp` and `.h` files are in the same directory.
+   - Open `CatDispenser.ino` in Arduino IDE with all associated files.
 
 6. **Compile and Upload**:
-   - Click the `Verify` button (checkmark) to compile the code.
-   - Click the `Upload` button (right arrow) to burn the code to the ESP32.
+   - Compile the code using the `Verify` button.
+   - Upload the code using the `Upload` button.
 
 7. **Run the Project**:
-   - Once the code is uploaded, the ESP32 will start running the cat food dispenser program.
-   - Connect to the Wi-Fi network and access the web server interface to configure the dispenser.
+   - The ESP32 will start the cat food dispenser program.
+   - Access the web interface to configure settings.
 
 ## User Guide
 
-1. **Initial Setup**:
-   - Power on the ESP32 and ensure it is connected to your Wi-Fi network.
-   - Access the web server interface by navigating to the ESP32's IP address in a web browser.
+### 1. Initial Setup
+- Power on the ESP32 and ensure it is connected to your Wi-Fi network.
+- **Important**: Before uploading the code, modify the Wi-Fi credentials in `CatDispenser.ino`:
+  ```cpp
+  initWiFi("Your_WiFi_SSID", "Your_WiFi_Password");
+  ```
+- Access the web interface via the ESP32's IP address.
 
-2. **Configure Dispenser**:
-   - Set the portion size and dispense times using the web interface.
-   - Save the settings, and the dispenser will start operating according to the schedule.
+### 2. Configure Dispenser
+- **Set Portion Size**:
+  - Enter the desired portion size (in grams).
+  - Example: Enter `30` for 30g.
+- **Select Time Slots**:
+  - Choose multiple time slots for food dispensing.
+  - Example: `08:00` and `18:00` for twice daily.
+- **Save Settings**:
+  - Click `Save` to store settings.
 
-3. **Monitor and Control**:
-   - Use the web interface to monitor the current state of the dispenser (e.g., standby, dispensing, refill needed).
-   - Manually trigger dispensing if needed.
+### 3. Monitor and Control
+- **Dispenser Status**:
+  - View current weight and portion scales.
+  - Example: `377.4g` available, `0.0g` dispensed.
+- **Manual Dispense**:
+  - Click `Dispense Now!` to release food immediately.
 
-4. **Refill Notification**:
-   - When the dispenser needs a refill, it will send a notification via Telegram and display an alert on the web interface.
+### 4. Refill Notification
+- If food is low, an alert appears on the web interface.
+- A Telegram notification is sent.
+- Example: `Dispenser scale: 21.4g, Portion scale: 30.3g` → Prompt to refill.
+
+### 5. Troubleshooting
+- **ESP32 not responding?**
+  - Check Wi-Fi connection.
+  - Check serial monitor for errors.
+  - Verify portion size and time slots.
 
 ## Links
 - **PowerPoint Presentation**: [Link to your PowerPoint presentation]
 - **YouTube Video**: [Link to your YouTube video]
 
 ## Conclusion
-This project provides an automated solution for dispensing cat food at scheduled times, with remote monitoring and control capabilities. It is a great example of how IoT can be used to simplify everyday tasks.
+This project automates cat food dispensing with remote monitoring and control. It demonstrates IoT integration for simplifying everyday tasks.
+
