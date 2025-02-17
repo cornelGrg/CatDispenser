@@ -12,7 +12,7 @@ This project is an automated cat food dispenser that uses an ESP32 microcontroll
   ![ESP32 Module](images/image2.png)
 - **Servo Motors**: 2 x Servo Motors
 - **Load Cells**: 2 x HX711 (for scales)
- ![Load Cells](images/image6.png)
+![Load Cells](images/image6.png)
 - **Power Supply**: MB102
  ![MB102](images/image5.png)
 - **Vibration Motor**: 1 x Vibration Motor
