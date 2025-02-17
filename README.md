@@ -4,6 +4,10 @@
 🤖 **#Automation** | 🔧 **#EmbeddedSystems** | 🎮 **#ServoMotor** | ⚖️ **#LoadCell** | 📡 **#WiFi**  
 💻 **#ArduinoIDE** | 🏡 **#SmartHome** | 🎯 **#Microcontrollers**
 
+## Links
+- **PowerPoint Presentation**: [PowerPoint Presentation](https://www.canva.com/design/DAGfAB7ns-E/sE3jqrV-YtkBJxjs11Cx8Q/edit)
+- **YouTube Video**: [YouTube Video](https://www.youtube.com/watch?v=dQw4w9WgXcQ&ab_channel=RickAstley)
+
 ## Overview
 This project is an automated cat food dispenser that uses an ESP32 microcontroller to control servo motors, load cells (scales), and a vibration motor. The dispenser can be programmed to release a specific portion of food at scheduled times. It also includes a web server interface for configuration and monitoring.
 
@@ -138,11 +142,7 @@ Remember to save your preferences!
   - Check serial monitor for errors.
   - Verify portion size and time slots.
 
-## Links
-- **PowerPoint Presentation**: [CLICK ME!](https://www.canva.com/design/DAGfAB7ns-E/sE3jqrV-YtkBJxjs11Cx8Q/edit)
-- **YouTube Video**: [CLICK ME!](https://www.youtube.com/watch?v=dQw4w9WgXcQ&ab_channel=RickAstley)
 
-## Conclusion
-Project Sphinx automates cat food dispensing with remote monitoring and control. The web interface allows users to easily configure and monitor the system, making it a practical IoT solution for pet care.
+
 
 
