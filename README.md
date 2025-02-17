@@ -1,4 +1,9 @@
 # Cat Food Dispenser Project
+![Language](https://img.shields.io/badge/Language-C++-8A2BE2)
+![Language](https://img.shields.io/badge/Version-1.0-red)    
+![Language](https://img.shields.io/badge/IOT-blue)
+![Language](https://img.shields.io/badge/ESP32-green)
+
 ## Tags  
 🎯 **#CatFoodDispenser** | ⚡ **#ESP32** | 🛠 **#Arduino** | 🌐 **#IoT** | 🐾 **#SmartPetFeeder**  
 🤖 **#Automation** | 🔧 **#EmbeddedSystems** | 🎮 **#ServoMotor** | ⚖️ **#LoadCell** | 📡 **#WiFi**  
@@ -14,9 +19,9 @@ This project is an automated cat food dispenser that uses an ESP32 microcontroll
 ## Hardware Requirements
 - **MCU**: ESP32  
   <div align="left"><img src="images/image2.png" alt="ESP32 Module"></div>
-- **Servo Motors**: 2 x Servo Motors  
+- **Servo Motors**: 2 x SG90 Servo Motors  
   <div align="left"><img src="images/image8.png" alt="Servo Motors" ></div>
-- **Load Cells**: 2 x HX711 (for scales)  
+- **Load Cells**: 2 x HX711 (ADC used for the scales)  
   <div align="left"><img src="images/image6.png" alt="Load Cells" ></div>
 - **Power Supply**: MB102  
   <div align="left"><img src="images/image5.png" alt="MB102" ></div>
@@ -25,7 +30,7 @@ This project is an automated cat food dispenser that uses an ESP32 microcontroll
 - **Structure**: Cardboard, Glue, Tape, Wires, and Breadboard
 
 ## Software Requirements
-- **Arduino IDE**: For programming the ESP32.
+- **Arduino IDE**: For compiling and burning the software onto the ESP32.
 - **Libraries**:
   - `WiFi.h`
   - `AsyncTCP.h`
@@ -40,19 +45,44 @@ This project is an automated cat food dispenser that uses an ESP32 microcontroll
 ## Project Layout
 
 ### Source Code Organization
-The project is organized into several files, each handling a specific functionality:
 
-- **wifiSupport.cpp**: Handles Wi-Fi connection and status checks.
-- **CatDispenser.ino**: Main file that initializes the system and runs the state machine.
-- **powerSaving.cpp**: Manages power-saving modes.
-- **scaleSupport.cpp**: Handles calibration and reading of the load cells.
-- **servoSupport.cpp**: Controls the servo motors.
-- **stateMachine.cpp**: Implements the state machine logic for the dispenser.
-- **webServerSupport.cpp**: Manages the web server for configuration and monitoring.
-- **timerSupport.cpp**: Handles time synchronization and scheduling.
-- **webServer.html**: Implements the front-end interface for controlling and monitoring the dispenser.
+| File                  | Description |
+|-----------------------|-------------|
+| **wifiSupport.cpp**   | Handles Wi-Fi connection and status checks. |
+| **CatDispenser.ino**  | Main file that initializes the system and runs the state machine. |
+| **powerSaving.cpp**   | Manages power-saving functions. |
+| **scaleSupport.cpp**  | Handles calibration and reading of the load cells. |
+| **servoSupport.cpp**  | Controls the servo motors. |
+| **stateMachine.cpp**  | Implements the state machine logic for the dispenser. |
+| **webServerSupport.cpp** | Manages the web server for configuration and monitoring through HTTP request handlers. |
+| **timerSupport.cpp**  | Handles time synchronization, scheduling, and syncing with the NTP server. |
+| **webServer.html**    | Implements the front-end interface for controlling and monitoring the dispenser. |
 
-  each .cpp file has its own .h header associated
+Each `.cpp` file has its own `.h` header associated.
+
+### Directory Structure
+```bash
+CatDispenser/
+│   ├── CatDispenser.ino
+│   ├── data
+│   │   └── WebServer.html
+│   ├── powerSaving.cpp
+│   ├── powerSaving.h
+│   ├── scaleSupport.cpp
+│   ├── scaleSupport.h
+│   ├── servoSupport.cpp
+│   ├── servoSupport.h
+│   ├── stateMachine.cpp
+│   ├── stateMachine.h
+│   ├── timerSupport.cpp
+│   ├── timerSupport.h
+│   ├── webServerSupport.cpp
+│   ├── webServerSupport.h
+│   ├── wifiSupport.cpp
+│   └── wifiSupport.h
+└── README.md
+
+```
 
 ## User Interface
 
@@ -63,8 +93,8 @@ The dispenser has a simple web interface for setting up and monitoring food disp
 ### Features  
 - **Portion Control**: Users can set the portion size for each feeding session.
 - **Scheduled Feeding**: Time slots can be selected to schedule food dispensing, with a **maximum of 7 slots**.
-- **Live Monitoring**: The dispenser scale shows real-time food levels.
-- **Refill Alerts**: Notifications are sent when the food level is low.
+- **Live Monitoring**: The dispenser scale shows real-time food levels featuring auto updates on the web interface.
+- **Refill Alerts**: Persistant notifications appear on the web server to alert the need for a refill.
 
 #### Example of a low food level alert:
 ![Refill Alert](images/image3.png)
@@ -108,7 +138,7 @@ Remember to save your preferences!
 
 ### 1. Initial Setup
 - Power on the ESP32 and ensure it is connected to your Wi-Fi network.
-- **Important**: Before uploading the code, modify the Wi-Fi credentials in `CatDispenser.ino`:
+- **Important**: Before burning the code on the ESP32, modify the Wi-Fi credentials in `CatDispenser.ino`:
   ```cpp
   initWiFi("Your_WiFi_SSID", "Your_WiFi_Password");
   ```
@@ -119,21 +149,21 @@ Remember to save your preferences!
   - Enter the desired portion size (in grams).
   - Example: Enter `30` for 30g.
 - **Select Time Slots**:
-  - Choose multiple time slots for food dispensing.
+  - Choose multiple time slots for food dispensing (up to 7).
   - Example: `08:00` and `18:00` for twice daily.
 - **Save Settings**:
-  - Click `Save` to store settings.
+  - Click `Save Settings` to store settings.
 
 ### 3. Monitor and Control
 - **Dispenser Status**:
   - View current weight and portion scales.
-  - Example: `377.4g` available, `0.0g` dispensed.
+  - Example: `377.4g` available, `0.0g` of food currently in the bowl.
 - **Manual Dispense**:
   - Click `Dispense Now!` to release food immediately.
 
 ### 4. Refill Notification
 - If food is low, an alert appears on the web interface.
-- A Telegram notification is sent.
+- A Telegram notification is sent thanks to the CallMeBotAPI, [get your CallMeBot API key for telegram groups](https://www.callmebot.com/blog/telegram-group-messages-api-easy/) (can be setup for groups or single users).
 - Example: `Dispenser scale: 21.4g, Portion scale: 30.3g` → Prompt to refill.
 
 ### 5. Troubleshooting
@@ -142,6 +172,12 @@ Remember to save your preferences!
   - Check serial monitor for errors.
   - Verify portion size and time slots.
 
+## Team Contributions:
+### Software:
+- For developing the software all the team members worked on the code simultaneously by using Clion's Code With Me plugin communicating through Discord calls.
+
+### Physical prototype:
+- Multiple in person group meetings have been hold where we worked together on the prototype, from designing it, all the way to the manufacturing process.
 
 
 
