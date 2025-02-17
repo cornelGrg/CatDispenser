@@ -137,7 +137,7 @@ Remember to save your preferences!
   - Verify portion size and time slots.
 
 ## Links
-- **PowerPoint Presentation**: [Link to your PowerPoint presentation]
+- **PowerPoint Presentation**: [CLICK ME!](https://www.canva.com/design/DAGfAB7ns-E/sE3jqrV-YtkBJxjs11Cx8Q/edit)
 - **YouTube Video**: [Link to your YouTube video]
 
 ## Conclusion
