@@ -56,7 +56,7 @@ The dispenser has a simple web interface for setting up and monitoring food disp
 
 ### Features  
 - **Portion Control**: Users can set the portion size for each feeding session.
-- **Scheduled Feeding**: Time slots can be selected to schedule food dispensing.
+- **Scheduled Feeding**: Time slots can be selected to schedule food dispensing, with a **maximum of 7 slots**.
 - **Live Monitoring**: The dispenser scale shows real-time food levels.
 - **Refill Alerts**: Notifications are sent when the food level is low.
 
