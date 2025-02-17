@@ -141,6 +141,6 @@ Remember to save your preferences!
 - **YouTube Video**: [Link to your YouTube video]
 
 ## Conclusion
-This project automates cat food dispensing with remote monitoring and control. The web interface allows users to easily configure and monitor the system, making it a practical IoT solution for pet care.
+Project Sphinx automates cat food dispensing with remote monitoring and control. The web interface allows users to easily configure and monitor the system, making it a practical IoT solution for pet care.
 
 
