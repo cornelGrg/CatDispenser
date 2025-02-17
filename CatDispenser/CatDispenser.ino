@@ -16,7 +16,7 @@ volatile State_t currentState = INIT;
 void setup() {
     Serial.begin(115200);
     // Connect to Wi-Fi for synchronization
-    initWiFi("HomeLife_Fibra", "grepolis2003");
+    initWiFi("wifiSSID", "password");
     //Check if connected to Wi-Fi
     checkWifiStatus();
 
