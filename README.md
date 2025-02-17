@@ -8,7 +8,8 @@
 This project is an automated cat food dispenser that uses an ESP32 microcontroller to control servo motors, load cells (scales), and a vibration motor. The dispenser can be programmed to release a specific portion of food at scheduled times. It also includes a web server interface for configuration and monitoring.
 
 ## Hardware Requirements
-- **MCU**: ESP32
+- **MCU**: ESP32  
+  ![ESP32 Module](images/image2.png)
 - **Servo Motors**: 2 x Servo Motors
 - **Load Cells**: 2 x HX711 (for scales)
 - **Power Supply**: MB102
@@ -42,6 +43,24 @@ The project is organized into several files, each handling a specific functional
 - **webServerSupport.cpp**: Manages the web server for configuration and monitoring.
 - **timerSupport.cpp**: Handles time synchronization and scheduling.
 - **webServer.html**: Implements the front-end interface for controlling and monitoring the dispenser.
+
+## User Interface
+
+### Web Interface Overview
+The dispenser has a simple web interface for setting up and monitoring food dispensing.  
+![Basic UI](images/image1.png)
+
+### Features  
+- **Portion Control**: Users can set the portion size for each feeding session.
+- **Scheduled Feeding**: Time slots can be selected to schedule food dispensing.
+- **Live Monitoring**: The dispenser scale shows real-time food levels.
+- **Refill Alerts**: Notifications are sent when the food level is low.
+
+#### Example of a low food level alert:
+![Refill Alert](images/image3.png)
+
+#### Setting feeding times via the web interface:
+![Time Slot Selection](images/image4.png)
 
 ### How to Build, Burn, and Run the Project
 
