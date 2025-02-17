@@ -8,7 +8,7 @@
 This project is an automated cat food dispenser that uses an ESP32 microcontroller to control servo motors, load cells (scales), and a vibration motor. The dispenser can be programmed to release a specific portion of food at scheduled times. It also includes a web server interface for configuration and monitoring.
 
 ## Hardware Requirements
-- **MCU**: ESP32  
+- **MCU**: ESP32
   ![ESP32 Module](images/image2.png)
 - **Servo Motors**: 2 x Servo Motors
 - **Load Cells**: 2 x HX711 (for scales)
