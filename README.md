@@ -1,4 +1,4 @@
- # Cat Food Dispenser Project
+# Cat Food Dispenser Project
 ## Tags  
 🎯 **#CatFoodDispenser** | ⚡ **#ESP32** | 🛠 **#Arduino** | 🌐 **#IoT** | 🐾 **#SmartPetFeeder**  
 🤖 **#Automation** | 🔧 **#EmbeddedSystems** | 🎮 **#ServoMotor** | ⚖️ **#LoadCell** | 📡 **#WiFi**  
@@ -8,16 +8,16 @@
 This project is an automated cat food dispenser that uses an ESP32 microcontroller to control servo motors, load cells (scales), and a vibration motor. The dispenser can be programmed to release a specific portion of food at scheduled times. It also includes a web server interface for configuration and monitoring.
 
 ## Hardware Requirements
-- **MCU**: ESP32
-&#8203;![ESP32 Module](images/image2.png)
-- **Servo Motors**: 2 x Servo Motors
-&#8203;![Servo Motors](images/image8.png)
-- **Load Cells**: 2 x HX711 (for scales)
-&#8203;![Load Cells](images/image6.png)
-- **Power Supply**: MB102
-&#8203;![MB102](images/image5.png)
-- **Vibration Motor**: 1 x Vibration Motor
-&#8203;![VIBRATORE](images/image7.png)
+- **MCU**: ESP32  
+  <div align="center"><img src="images/image2.png" alt="ESP32 Module"></div>
+- **Servo Motors**: 2 x Servo Motors  
+  <div align="center"><img src="images/image8.png" alt="Servo Motors" ></div>
+- **Load Cells**: 2 x HX711 (for scales)  
+  <div align="center"><img src="images/image6.png" alt="Load Cells" ></div>
+- **Power Supply**: MB102  
+  <div align="center"><img src="images/image5.png" alt="MB102" ></div>
+- **Vibration Motor**: 1 x Vibration Motor  
+  <div align="center"><img src="images/image7.png" alt="VIBRATORE"></div>
 - **Structure**: Cardboard, Glue, Tape, Wires, and Breadboard
 
 ## Software Requirements
