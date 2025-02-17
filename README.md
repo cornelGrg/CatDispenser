@@ -1,4 +1,8 @@
 # Cat Food Dispenser Project
+## Tags  
+🎯 **#CatFoodDispenser** | ⚡ **#ESP32** | 🛠 **#Arduino** | 🌐 **#IoT** | 🐾 **#SmartPetFeeder**  
+🤖 **#Automation** | 🔧 **#EmbeddedSystems** | 🎮 **#ServoMotor** | ⚖️ **#LoadCell** | 📡 **#WiFi**  
+💻 **#ArduinoIDE** | 🏡 **#SmartHome** | 🎯 **#Microcontrollers**
 
 ## Overview
 This project is an automated cat food dispenser that uses an ESP32 microcontroller to control servo motors, load cells (scales), and a vibration motor. The dispenser can be programmed to release a specific portion of food at scheduled times. It also includes a web server interface for configuration and monitoring.
