@@ -65,7 +65,7 @@ The dispenser has a simple web interface for setting up and monitoring food disp
 
 #### Setting feeding times via the web interface:
 ![Time Slot Selection](images/image4.png)
-
+Remember to save your preferences!
 ### How to Build, Burn, and Run the Project
 
 1. **Install Arduino IDE**:
