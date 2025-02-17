@@ -5,8 +5,8 @@
 💻 **#ArduinoIDE** | 🏡 **#SmartHome** | 🎯 **#Microcontrollers**
 
 ## Links
-- **PowerPoint Presentation**: [PowerPoint Presentation](https://www.canva.com/design/DAGfAB7ns-E/sE3jqrV-YtkBJxjs11Cx8Q/edit)
-- **YouTube Video**: [YouTube Video](https://www.youtube.com/watch?v=dQw4w9WgXcQ&ab_channel=RickAstley)
+-  [PowerPoint Presentation](https://www.canva.com/design/DAGfAB7ns-E/sE3jqrV-YtkBJxjs11Cx8Q/edit)
+-  [YouTube Video](https://www.youtube.com/watch?v=dQw4w9WgXcQ&ab_channel=RickAstley)
 
 ## Overview
 This project is an automated cat food dispenser that uses an ESP32 microcontroller to control servo motors, load cells (scales), and a vibration motor. The dispenser can be programmed to release a specific portion of food at scheduled times. It also includes a web server interface for configuration and monitoring.
