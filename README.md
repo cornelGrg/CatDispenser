@@ -48,6 +48,8 @@ The project is organized into several files, each handling a specific functional
 - **timerSupport.cpp**: Handles time synchronization and scheduling.
 - **webServer.html**: Implements the front-end interface for controlling and monitoring the dispenser.
 
+  each .cpp file has its own .h header associated
+
 ## User Interface
 
 ### Web Interface Overview
