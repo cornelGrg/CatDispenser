@@ -14,6 +14,7 @@ void initTime() {
 void syncTimeWithNTP() {
     // Synchronize time with NTP server
     initTime();
+
     // Verify synchronization
     struct tm timeinfo;
     if (getLocalTime(&timeinfo)) {
